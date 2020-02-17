@@ -8,15 +8,15 @@ namespace LSSCBackEnd.Models
         public TblQuestionBank()
         {
             TblAssessmentBatch = new HashSet<TblAssessmentBatch>();
+            TblQuestionPaperVersion = new HashSet<TblQuestionPaperVersion>();
         }
 
         public int QbCode { get; set; }
         public string QbName { get; set; }
-        public string QbCategory { get; set; }
-        public string QbDesp { get; set; }
         public string QbRelatedQp { get; set; }
 
         public TblQp QbRelatedQpNavigation { get; set; }
         public ICollection<TblAssessmentBatch> TblAssessmentBatch { get; set; }
+        public ICollection<TblQuestionPaperVersion> TblQuestionPaperVersion { get; set; }
     }
 }

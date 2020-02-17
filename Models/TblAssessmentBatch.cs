@@ -21,8 +21,7 @@ namespace LSSCBackEnd.Models
         public string AsCity { get; set; }
         public string AsQpId { get; set; }
         public int AsQuestionBankId { get; set; }
-        public int AsQuestionPaperVersion { get; set; }
-        public int AsTheoryQuestionId { get; set; }
+        public int AsTheoryQuestionPaperVersion { get; set; }
         public int AsPracticalQuestionId { get; set; }
         public string AsFacilitator { get; set; }
         public string AsSdmsbatchName { get; set; }
@@ -41,12 +40,11 @@ namespace LSSCBackEnd.Models
         public string AsRemarks { get; set; }
 
         public TblCenter AsCenter { get; set; }
-        public TblPracticalQuestion AsPracticalQuestion { get; set; }
+        public TblQuestionPaperVersion AsPracticalQuestion { get; set; }
         public TblProject AsProject { get; set; }
         public TblQp AsQp { get; set; }
         public TblQuestionBank AsQuestionBank { get; set; }
-        public TblQuestionPaperVersion AsQuestionPaperVersionNavigation { get; set; }
-        public TblTheoryQuestions AsTheoryQuestion { get; set; }
+        public TblQuestionPaperVersion AsTheoryQuestionPaperVersionNavigation { get; set; }
         public ICollection<TblAssessmentProof> TblAssessmentProof { get; set; }
         public ICollection<TblFinalResult> TblFinalResult { get; set; }
         public ICollection<TblPracticalResult> TblPracticalResult { get; set; }

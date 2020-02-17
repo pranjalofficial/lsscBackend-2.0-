@@ -7,7 +7,8 @@ namespace LSSCBackEnd.Models
     {
         public TblQuestionPaperVersion()
         {
-            TblAssessmentBatch = new HashSet<TblAssessmentBatch>();
+            TblAssessmentBatchAsPracticalQuestion = new HashSet<TblAssessmentBatch>();
+            TblAssessmentBatchAsTheoryQuestionPaperVersionNavigation = new HashSet<TblAssessmentBatch>();
             TblPracticalQuestion = new HashSet<TblPracticalQuestion>();
             TblTheoryQuestions = new HashSet<TblTheoryQuestions>();
         }
@@ -16,8 +17,14 @@ namespace LSSCBackEnd.Models
         public int? QvQlId { get; set; }
         public string QvName { get; set; }
         public string QvType { get; set; }
+        public int? QvEnglish { get; set; }
+        public int? QvHindi { get; set; }
+        public int? QvTamil { get; set; }
+        public int? QvBangali { get; set; }
 
-        public ICollection<TblAssessmentBatch> TblAssessmentBatch { get; set; }
+        public TblQuestionBank QvQl { get; set; }
+        public ICollection<TblAssessmentBatch> TblAssessmentBatchAsPracticalQuestion { get; set; }
+        public ICollection<TblAssessmentBatch> TblAssessmentBatchAsTheoryQuestionPaperVersionNavigation { get; set; }
         public ICollection<TblPracticalQuestion> TblPracticalQuestion { get; set; }
         public ICollection<TblTheoryQuestions> TblTheoryQuestions { get; set; }
     }

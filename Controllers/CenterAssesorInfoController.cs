@@ -14,7 +14,7 @@ namespace LSSCBackEnd.Controllers
     [ApiController]
     public class CenterAssesorInfoController : ControllerBase
     {
-        lsscContext dataOut = new lsscContext();
+        lsscPortalContext dataOut = new lsscPortalContext();
         // GET: api/CenterAssesorInfo/5
         [HttpGet("{id}")]
         public CenterAssesor Get(int id)

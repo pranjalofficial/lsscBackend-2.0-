@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace LSSCBackEnd.Models
 {
-    public partial class lsscContext : DbContext
+    public partial class lsscPortalContext : DbContext
     {
-        public lsscContext()
+        public lsscPortalContext()
         {
         }
 
-        public lsscContext(DbContextOptions<lsscContext> options)
+        public lsscPortalContext(DbContextOptions<lsscPortalContext> options)
             : base(options)
         {
         }
@@ -35,12 +35,14 @@ namespace LSSCBackEnd.Models
         public virtual DbSet<TblTrainingPartner> TblTrainingPartner { get; set; }
         public virtual DbQuery<CenterAssesor> CenterAssesors { get; set; }
 
+        public virtual DbQuery<practicalQuestions> PracticalQuestions { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=DESKTOP-537BQNR\\SQLEXPRESS;Database=lssc;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=.\\SQLExpress;Database=lsscPortal;Trusted_Connection=True;");
             }
         }
 
@@ -110,8 +112,6 @@ namespace LSSCBackEnd.Models
 
                 entity.Property(e => e.AsQuestionBankId).HasColumnName("asQuestionBankID");
 
-                entity.Property(e => e.AsQuestionPaperVersion).HasColumnName("asQuestionPaperVersion");
-
                 entity.Property(e => e.AsRegionalLang)
                     .HasColumnName("asRegionalLang")
                     .HasMaxLength(40);
@@ -130,7 +130,7 @@ namespace LSSCBackEnd.Models
                     .HasColumnName("asState")
                     .HasMaxLength(30);
 
-                entity.Property(e => e.AsTheoryQuestionId).HasColumnName("asTheoryQuestionID");
+                entity.Property(e => e.AsTheoryQuestionPaperVersion).HasColumnName("asTheoryQuestionPaperVersion");
 
                 entity.Property(e => e.AsTrainingEndDate)
                     .HasColumnName("asTrainingEndDate")
@@ -152,10 +152,10 @@ namespace LSSCBackEnd.Models
                     .HasConstraintName("FK_assecenterID");
 
                 entity.HasOne(d => d.AsPracticalQuestion)
-                    .WithMany(p => p.TblAssessmentBatch)
+                    .WithMany(p => p.TblAssessmentBatchAsPracticalQuestion)
                     .HasForeignKey(d => d.AsPracticalQuestionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_practical");
+                    .HasConstraintName("FK_practicalQuestionVersion");
 
                 entity.HasOne(d => d.AsProject)
                     .WithMany(p => p.TblAssessmentBatch)
@@ -175,17 +175,11 @@ namespace LSSCBackEnd.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_qbID");
 
-                entity.HasOne(d => d.AsQuestionPaperVersionNavigation)
-                    .WithMany(p => p.TblAssessmentBatch)
-                    .HasForeignKey(d => d.AsQuestionPaperVersion)
+                entity.HasOne(d => d.AsTheoryQuestionPaperVersionNavigation)
+                    .WithMany(p => p.TblAssessmentBatchAsTheoryQuestionPaperVersionNavigation)
+                    .HasForeignKey(d => d.AsTheoryQuestionPaperVersion)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_paperVer");
-
-                entity.HasOne(d => d.AsTheoryQuestion)
-                    .WithMany(p => p.TblAssessmentBatch)
-                    .HasForeignKey(d => d.AsTheoryQuestionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_theory");
+                    .HasConstraintName("FK_TheorypaperVer");
             });
 
             modelBuilder.Entity<TblAssessmentProof>(entity =>
@@ -381,12 +375,11 @@ namespace LSSCBackEnd.Models
 
                 entity.Property(e => e.NosDesp)
                     .HasColumnName("nosDesp")
-                    .HasMaxLength(100);
+                    .HasMaxLength(10);
 
                 entity.Property(e => e.NosName)
-                    .IsRequired()
                     .HasColumnName("nosName")
-                    .HasMaxLength(30);
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.NosQpCode)
                     .HasColumnName("nosQpCode")
@@ -591,14 +584,6 @@ namespace LSSCBackEnd.Models
 
                 entity.Property(e => e.QbCode).HasColumnName("qbCode");
 
-                entity.Property(e => e.QbCategory)
-                    .HasColumnName("qbCategory")
-                    .HasMaxLength(30);
-
-                entity.Property(e => e.QbDesp)
-                    .HasColumnName("qbDesp")
-                    .HasMaxLength(30);
-
                 entity.Property(e => e.QbName)
                     .IsRequired()
                     .HasColumnName("qbName")
@@ -622,6 +607,18 @@ namespace LSSCBackEnd.Models
 
                 entity.Property(e => e.QvId).HasColumnName("qvId");
 
+                entity.Property(e => e.QvBangali)
+                    .HasColumnName("qvBangali")
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.QvEnglish)
+                    .HasColumnName("qvEnglish")
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.QvHindi)
+                    .HasColumnName("qvHindi")
+                    .HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.QvName)
                     .IsRequired()
                     .HasColumnName("qvName")
@@ -629,10 +626,19 @@ namespace LSSCBackEnd.Models
 
                 entity.Property(e => e.QvQlId).HasColumnName("qvQlId");
 
+                entity.Property(e => e.QvTamil)
+                    .HasColumnName("qvTamil")
+                    .HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.QvType)
                     .IsRequired()
                     .HasColumnName("qvType")
                     .HasMaxLength(30);
+
+                entity.HasOne(d => d.QvQl)
+                    .WithMany(p => p.TblQuestionPaperVersion)
+                    .HasForeignKey(d => d.QvQlId)
+                    .HasConstraintName("FK_QBidversionRel");
             });
 
             modelBuilder.Entity<TblTheoryQuestions>(entity =>
@@ -643,34 +649,96 @@ namespace LSSCBackEnd.Models
 
                 entity.Property(e => e.TqCode).HasColumnName("tqCode");
 
+                entity.Property(e => e.TqBengaliOption1)
+                    .HasColumnName("tqBengaliOption1")
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.TqBengaliOption2)
+                    .HasColumnName("tqBengaliOption2")
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.TqBengaliOption3)
+                    .HasColumnName("tqBengaliOption3")
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.TqBengaliOption4)
+                    .HasColumnName("tqBengaliOption4")
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.TqBengaliQuestion)
+                    .HasColumnName("tqBengaliQuestion")
+                    .HasMaxLength(500);
+
                 entity.Property(e => e.TqCorrectAnswer).HasColumnName("tqCorrectAnswer");
+
+                entity.Property(e => e.TqHindiOption1)
+                    .HasColumnName("tqHindiOption1")
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.TqHindiOption2)
+                    .HasColumnName("tqHindiOption2")
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.TqHindiOption3)
+                    .HasColumnName("tqHindiOption3")
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.TqHindiOption4)
+                    .HasColumnName("tqHindiOption4")
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.TqHindiQuestion)
+                    .HasColumnName("tqHindiQuestion")
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.TqImg).HasColumnName("tqImg");
 
                 entity.Property(e => e.TqMarks).HasColumnName("tqMarks");
 
                 entity.Property(e => e.TqOption1)
                     .IsRequired()
                     .HasColumnName("tqOption1")
-                    .HasMaxLength(50);
+                    .HasMaxLength(500);
 
                 entity.Property(e => e.TqOption2)
                     .IsRequired()
                     .HasColumnName("tqOption2")
-                    .HasMaxLength(50);
+                    .HasMaxLength(500);
 
                 entity.Property(e => e.TqOption3)
                     .IsRequired()
                     .HasColumnName("tqOption3")
-                    .HasMaxLength(50);
+                    .HasMaxLength(500);
 
                 entity.Property(e => e.TqOption4)
                     .IsRequired()
                     .HasColumnName("tqOption4")
-                    .HasMaxLength(50);
+                    .HasMaxLength(500);
 
                 entity.Property(e => e.TqQuestion)
                     .IsRequired()
                     .HasColumnName("tqQuestion")
-                    .HasMaxLength(200);
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.TqTamilOption1)
+                    .HasColumnName("tqTamilOption1")
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.TqTamilOption2)
+                    .HasColumnName("tqTamilOption2")
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.TqTamilOption3)
+                    .HasColumnName("tqTamilOption3")
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.TqTamilOption4)
+                    .HasColumnName("tqTamilOption4")
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.TqTamilQuestion)
+                    .HasColumnName("tqTamilQuestion")
+                    .HasMaxLength(500);
 
                 entity.Property(e => e.TqVersionOfQb).HasColumnName("tqVersionOfQB");
 

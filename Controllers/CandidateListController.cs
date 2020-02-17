@@ -13,7 +13,7 @@ namespace LSSCBackEnd.Controllers
     [ApiController]
     public class CandidateListController : ControllerBase
     {
-        lsscContext dataOut = new lsscContext();
+        lsscPortalContext dataOut = new lsscPortalContext();
         // GET: api/CandidateList
         [HttpGet("{id}")]
         public IEnumerable<TblCandidateList> Get(int id)

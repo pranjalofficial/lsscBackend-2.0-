@@ -13,7 +13,7 @@ namespace LSSCBackEnd.Controllers
     [ApiController]
     public class QuestionPaperController : ControllerBase
     {
-        lsscContext dataOut = new lsscContext();
+        lsscPortalContext dataOut = new lsscPortalContext();
         // GET: api/QuestionPaper
         [HttpGet("{id}")]
         public IEnumerable<TblTheoryQuestions> Get(int id)

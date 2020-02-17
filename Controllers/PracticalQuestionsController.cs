@@ -10,13 +10,13 @@ namespace LSSCBackEnd.Controllers
     [ApiController]
     public class PracticalQuestionsController : ControllerBase
     {
-        lsscContext dataOut = new lsscContext();
+        lsscPortalContext dataOut = new lsscPortalContext();
         // GET: api/PracticalQuestions
         [HttpGet("{id}")]
-        public IEnumerable<TblPracticalQuestion> Get(int id)
+        public IEnumerable<practicalQuestions> Get(int id)
         {
-            List<TblPracticalQuestion> practicalQuestion;
-            practicalQuestion = dataOut.TblPracticalQuestion.FromSql("exec spQuestionPaperPractical " +id).ToList();
+            List<practicalQuestions> practicalQuestion;
+            practicalQuestion = dataOut.PracticalQuestions.FromSql("exec spQuestionPaperPractical " +id).ToList();
             return practicalQuestion;
         }
 

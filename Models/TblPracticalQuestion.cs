@@ -7,7 +7,6 @@ namespace LSSCBackEnd.Models
     {
         public TblPracticalQuestion()
         {
-            TblAssessmentBatch = new HashSet<TblAssessmentBatch>();
             TblPracticalResult = new HashSet<TblPracticalResult>();
         }
 
@@ -20,7 +19,6 @@ namespace LSSCBackEnd.Models
 
         public TblNos PqNosNavigation { get; set; }
         public TblQuestionPaperVersion PqVersionOfQbNavigation { get; set; }
-        public ICollection<TblAssessmentBatch> TblAssessmentBatch { get; set; }
         public ICollection<TblPracticalResult> TblPracticalResult { get; set; }
     }
 }
